@@ -30,7 +30,9 @@ const Index = () => {
 
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center" mt="16">
-      
+      <Flex justifyContent="space-between" width="100%" p={4} bg="gray.100" mb={4} position="fixed" top="0" left="0" right="0" zIndex="1000">
+        <Heading size="md">StakeWeb WHOIS</Heading>
+      </Flex>
       <VStack spacing={4} width="100%">
         <Input
           placeholder="Enter domain"
