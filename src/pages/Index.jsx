@@ -7,14 +7,12 @@ const Index = () => {
   const [multiWhoisData, setMultiWhoisData] = useState([]);
   const [error, setError] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
-  const [isMultiQueryComplete, setIsMultiQueryComplete] = useState(false);
 
   const fetchWhoisData = async () => {
     setError(null); // Clear the error message before initiating a new search
     setWhoisData(null);
     setMultiWhoisData([]);
     setHasSearched(false);
-    setIsMultiQueryComplete(false);
     try {
       const response = await fetch(`https://who-dat.as93.net/${domain}`);
       if (!response.ok) {
@@ -24,52 +22,34 @@ const Index = () => {
       setWhoisData(data);
       setHasSearched(true);
 
-      if (data.available === undefined) {
-        // If WHOIS information is not present, set status to "available"
-        setWhoisData({ available: true });
-      } else if (!data.available) {
+      if (!data.available) {
         const sld = domain.split('.')[0];
         const tlds = ['co', 'ai', 'io', 'org', 'net', 'xyz', 'info'];
         const multiResponses = await Promise.all(tlds.map(tld => fetch(`https://who-dat.as93.net/${sld}.${tld}`)));
         const multiData = await Promise.all(multiResponses.map(res => res.json()));
         setMultiWhoisData(multiData.map((data, index) => ({ ...data, domain: `${sld}.${tlds[index]}` })));
       }
-      setIsMultiQueryComplete(true);
     } catch (err) {
       setError(err.message);
       setWhoisData(null); // Ensure whoisData is null on error
       setHasSearched(true);
-      setIsMultiQueryComplete(true);
     }
   };
 
   const isDomainAvailable = whoisData === null && !error;
 
   return (
-    <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center" mt={8}>
-      <Box position="fixed" top={0} width="100%" bg="white" zIndex={1} p={4} boxShadow="md">
-        <VStack spacing={4} width="100%">
-          <Input
-            placeholder="Enter domain"
-            value={domain}
-            onChange={(e) => setDomain(e.target.value)}
-          />
-          <Button onClick={fetchWhoisData} colorScheme="blue">Search</Button>
-        </VStack>
-      </Box>
-      <Box mt={24} width="100%" overflowY="auto" maxHeight="80vh">
+    <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center" mt="16">
+      
+      <VStack spacing={4} width="100%">
+        <Input
+          placeholder="Enter domain"
+          value={domain}
+          onChange={(e) => setDomain(e.target.value)}
+        />
+        <Button onClick={fetchWhoisData} colorScheme="blue">Search</Button>
+        
         {hasSearched && error && (
-          <Box p={4} bg="gray.100" borderRadius="md" width="100%">
-            <Flex align="center" justify="space-between">
-              <Box>
-                <Text fontSize="xl" fontWeight="bold">{domain}</Text>
-                <Text color="red.500">Unavailable</Text>
-              </Box>
-              <Button colorScheme="teal">Try to Purchase This Domain Anyway</Button>
-            </Flex>
-          </Box>
-        )}
-        {hasSearched && whoisData && whoisData.available && isMultiQueryComplete && (
           <Box p={4} bg="gray.100" borderRadius="md" width="100%">
             <Flex align="center" justify="space-between">
               <Box>
@@ -80,7 +60,7 @@ const Index = () => {
             </Flex>
           </Box>
         )}
-        {hasSearched && whoisData && !whoisData.available && isMultiQueryComplete && (
+        {hasSearched && whoisData && (
           <Box p={4} bg="gray.100" borderRadius="md" width="100%">
             <Flex align="center" justify="space-between">
               <Box>
@@ -91,7 +71,7 @@ const Index = () => {
             </Flex>
           </Box>
         )}
-        {hasSearched && isDomainAvailable && isMultiQueryComplete && (
+        {hasSearched && isDomainAvailable && (
           <Box p={4} bg="gray.100" borderRadius="md" width="100%">
             <Flex align="center" justify="space-between">
               <Box>
@@ -118,7 +98,7 @@ const Index = () => {
             ))}
           </Box>
         )}
-      </Box>
+      </VStack>
     </Container>
   );
 };
