@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Container, Text, VStack, Input, Button, Box, Code } from "@chakra-ui/react";
-import fetch from "node-fetch";
 
 const Index = () => {
   const [domain, setDomain] = useState("");
