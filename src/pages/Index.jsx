@@ -1,15 +1,17 @@
-import { useState } from "react";
-import { Container, Text, VStack, Input, Button, Box, Code, Flex, Heading, IconButton } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { Container, Text, VStack, Input, Button, Box, Flex, Heading, IconButton } from "@chakra-ui/react";
 import { FaShoppingCart } from "react-icons/fa";
 
 const Index = () => {
   const [domain, setDomain] = useState("");
   const [whoisData, setWhoisData] = useState(null);
   const [error, setError] = useState(null);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const fetchWhoisData = async () => {
     setError(null);
     setWhoisData(null);
+    setHasSearched(false);
     try {
       const response = await fetch(`https://who-dat.as93.net/${domain}`);
       if (!response.ok) {
@@ -17,8 +19,10 @@ const Index = () => {
       }
       const data = await response.json();
       setWhoisData(data);
+      setHasSearched(true);
     } catch (err) {
       setError(err.message);
+      setHasSearched(true);
     }
   };
 
@@ -39,20 +43,26 @@ const Index = () => {
         />
         <Button onClick={fetchWhoisData} colorScheme="blue">Search</Button>
         {error && <Text color="red.500">{error}</Text>}
-        {whoisData && (
+        {hasSearched && whoisData && (
           <Box p={4} bg="gray.100" borderRadius="md" width="100%">
-            <Text fontSize="lg" mb={2}>Domain Status:</Text>
-            <Text fontSize="xl" fontWeight="bold">{domain}</Text>
-            <Text color="red.500">Registered and Unavailable</Text>
-            <Button colorScheme="teal" mt={4}>Try to Purchase This Domain Anyway</Button>
+            <Flex align="center" justify="space-between">
+              <Box>
+                <Text fontSize="xl" fontWeight="bold">{domain}</Text>
+                <Text color="red.500">Unavailable</Text>
+              </Box>
+              <Button colorScheme="teal">Try to Purchase This Domain Anyway</Button>
+            </Flex>
           </Box>
         )}
-        {isDomainAvailable && (
+        {hasSearched && isDomainAvailable && (
           <Box p={4} bg="gray.100" borderRadius="md" width="100%">
-            <Text fontSize="lg" mb={2}>Domain Status:</Text>
-            <Text fontSize="xl" fontWeight="bold">{domain}</Text>
-            <Text color="green.500">Not Registered and Available</Text>
-            <Button colorScheme="teal" mt={4}>Add to Cart</Button>
+            <Flex align="center" justify="space-between">
+              <Box>
+                <Text fontSize="xl" fontWeight="bold">{domain}</Text>
+                <Text color="green.500">Not Registered and Available</Text>
+              </Box>
+              <Button colorScheme="teal">Add to Cart</Button>
+            </Flex>
           </Box>
         )}
       </VStack>
