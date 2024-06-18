@@ -22,6 +22,7 @@ const Index = () => {
       setHasSearched(true);
     } catch (err) {
       setError(err.message);
+      setWhoisData(null); // Ensure whoisData is null on error
       setHasSearched(true);
     }
   };
@@ -43,6 +44,17 @@ const Index = () => {
         />
         <Button onClick={fetchWhoisData} colorScheme="blue">Search</Button>
         {error && <Text color="red.500">{error}</Text>}
+        {hasSearched && error && (
+          <Box p={4} bg="gray.100" borderRadius="md" width="100%">
+            <Flex align="center" justify="space-between">
+              <Box>
+                <Text fontSize="xl" fontWeight="bold">{domain}</Text>
+                <Text color="green.500">Not Registered and Available</Text>
+              </Box>
+              <Button colorScheme="teal">Add to Cart</Button>
+            </Flex>
+          </Box>
+        )}
         {hasSearched && whoisData && (
           <Box p={4} bg="gray.100" borderRadius="md" width="100%">
             <Flex align="center" justify="space-between">
