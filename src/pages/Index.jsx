@@ -3,6 +3,7 @@ import { Container, Text, VStack, Input, Button, Box, Flex, Heading } from "@cha
 
 const Index = () => {
   const [domain, setDomain] = useState("");
+  const [searchedDomain, setSearchedDomain] = useState("");
   const [whoisData, setWhoisData] = useState(null);
   const [error, setError] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
@@ -19,10 +20,12 @@ const Index = () => {
       const data = await response.json();
       setWhoisData(data);
       setHasSearched(true);
+      setSearchedDomain(domain); // Set the searched domain
     } catch (err) {
       setError(err.message);
       setWhoisData(null); // Ensure whoisData is null on error
       setHasSearched(true);
+      setSearchedDomain(domain); // Set the searched domain even on error
     }
   };
 
@@ -43,7 +46,7 @@ const Index = () => {
           <Box p={4} bg="gray.100" borderRadius="md" width="100%">
             <Flex align="center" justify="space-between">
               <Box>
-                <Text fontSize="xl" fontWeight="bold">{domain}</Text>
+                <Text fontSize="xl" fontWeight="bold">{searchedDomain}</Text> {/* Use searchedDomain */}
                 <Text color="green.500">Available</Text>
               </Box>
               <Button colorScheme="teal">Add to Cart</Button>
@@ -54,7 +57,7 @@ const Index = () => {
           <Box p={4} bg="gray.100" borderRadius="md" width="100%">
             <Flex align="center" justify="space-between">
               <Box>
-                <Text fontSize="xl" fontWeight="bold">{domain}</Text>
+                <Text fontSize="xl" fontWeight="bold">{searchedDomain}</Text> {/* Use searchedDomain */}
                 <Text color="red.500">Unavailable</Text>
               </Box>
               <Button colorScheme="teal">Try to Purchase This Domain Anyway</Button>
@@ -65,7 +68,7 @@ const Index = () => {
           <Box p={4} bg="gray.100" borderRadius="md" width="100%">
             <Flex align="center" justify="space-between">
               <Box>
-                <Text fontSize="xl" fontWeight="bold">{domain}</Text>
+                <Text fontSize="xl" fontWeight="bold">{searchedDomain}</Text> {/* Use searchedDomain */}
                 <Text color="green.500">Available</Text>
               </Box>
               <Button colorScheme="teal">Add to Cart</Button>
