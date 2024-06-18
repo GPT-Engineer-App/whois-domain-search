@@ -48,7 +48,7 @@ const Index = () => {
     };
 
     return (
-      <Box p={4} bg="gray.100" borderRadius="md" width="100%">
+      <Box p={4} bg="gray.100" borderRadius="md" width="100%" maxHeight="400px" overflowY="auto" mt={4}>
         <Heading size="md" mb={2}>WHOIS Data:</Heading>
         <Stack spacing={2}>
           {renderObject(data)}
