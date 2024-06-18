@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { Container, Text, VStack, Input, Button, Box, Code } from "@chakra-ui/react";
+import { Container, Text, VStack, Input, Button, Box, Spinner } from "@chakra-ui/react";
 
 const Index = () => {
   const [domain, setDomain] = useState("");
   const [whoisData, setWhoisData] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const fetchWhoisData = async () => {
+    setLoading(true);
     setError(null);
-    setWhoisData(null);
     try {
       const response = await fetch(`https://who-dat.as93.net/${domain}`);
       if (!response.ok) {
@@ -18,6 +19,8 @@ const Index = () => {
       setWhoisData(data);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -30,12 +33,13 @@ const Index = () => {
           value={domain}
           onChange={(e) => setDomain(e.target.value)}
         />
-        <Button onClick={fetchWhoisData} colorScheme="blue">Search</Button>
+        <Button onClick={fetchWhoisData} isDisabled={!domain || loading}>
+          {loading ? <Spinner size="sm" /> : "Search"}
+        </Button>
         {error && <Text color="red.500">{error}</Text>}
         {whoisData && (
-          <Box p={4} bg="gray.100" borderRadius="md" width="100%">
-            <Text fontSize="lg" mb={2}>WHOIS Data:</Text>
-            <Code>{JSON.stringify(whoisData, null, 2)}</Code>
+          <Box p={4} borderWidth={1} borderRadius="md" width="100%">
+            <pre>{JSON.stringify(whoisData, null, 2)}</pre>
           </Box>
         )}
       </VStack>
