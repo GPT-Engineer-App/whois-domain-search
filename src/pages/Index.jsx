@@ -28,7 +28,13 @@ const Index = () => {
         {Object.keys(data).map((key) => (
           <Box key={key} mb={4}>
             <Heading size="sm" mb={1}>{key}</Heading>
-            <Code>{JSON.stringify(data[key], null, 2)}</Code>
+            {typeof data[key] === 'object' ? (
+              <Box pl={4} borderLeft="2px solid #ccc">
+                {renderWhoisData(data[key])}
+              </Box>
+            ) : (
+              <Code>{JSON.stringify(data[key], null, 2)}</Code>
+            )}
             <Divider mt={2} />
           </Box>
         ))}
