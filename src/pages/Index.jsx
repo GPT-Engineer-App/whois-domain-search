@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Container, Text, VStack, Input, Button, Box, Code } from "@chakra-ui/react";
+import { Container, Text, VStack, Input, Button, Box, Code, Flex, Heading, IconButton } from "@chakra-ui/react";
+import { FaShoppingCart } from "react-icons/fa";
 
 const Index = () => {
   const [domain, setDomain] = useState("");
@@ -21,9 +22,15 @@ const Index = () => {
     }
   };
 
+  const isDomainAvailable = whoisData === null && !error;
+
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-      <VStack spacing={4}>
+      <Flex justifyContent="space-between" width="100%" p={4} bg="gray.100" mb={4}>
+        <Heading size="md">Domain Checker</Heading>
+        <IconButton icon={<FaShoppingCart />} aria-label="Cart" />
+      </Flex>
+      <VStack spacing={4} width="100%">
         <Text fontSize="2xl">WHOIS Lookup</Text>
         <Input
           placeholder="Enter domain"
@@ -34,8 +41,18 @@ const Index = () => {
         {error && <Text color="red.500">{error}</Text>}
         {whoisData && (
           <Box p={4} bg="gray.100" borderRadius="md" width="100%">
-            <Text fontSize="lg" mb={2}>WHOIS Data:</Text>
-            <Code>{JSON.stringify(whoisData, null, 2)}</Code>
+            <Text fontSize="lg" mb={2}>Domain Status:</Text>
+            <Text fontSize="xl" fontWeight="bold">{domain}</Text>
+            <Text color="red.500">Registered and Unavailable</Text>
+            <Button colorScheme="teal" mt={4}>Try to Purchase This Domain Anyway</Button>
+          </Box>
+        )}
+        {isDomainAvailable && (
+          <Box p={4} bg="gray.100" borderRadius="md" width="100%">
+            <Text fontSize="lg" mb={2}>Domain Status:</Text>
+            <Text fontSize="xl" fontWeight="bold">{domain}</Text>
+            <Text color="green.500">Not Registered and Available</Text>
+            <Button colorScheme="teal" mt={4}>Add to Cart</Button>
           </Box>
         )}
       </VStack>
