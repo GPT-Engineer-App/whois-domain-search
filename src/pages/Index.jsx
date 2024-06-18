@@ -53,7 +53,7 @@ const Index = () => {
       </Flex>
       
       {hasSearched && (
-        <Text fontSize="2xl" mb={4}>Search Results:</Text>
+        <Text fontSize="2xl" mb={4} textAlign="left" width="100%">Search Results:</Text>
       )}
 
       {hasSearched && error && (
