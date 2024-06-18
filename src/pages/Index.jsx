@@ -19,10 +19,10 @@ const Index = () => {
       }
       const data = await response.json();
       setWhoisData(data);
-      setHasSearched(true);
     } catch (err) {
       setError(err.message);
       setWhoisData(null); // Ensure whoisData is null on error
+    } finally {
       setHasSearched(true);
     }
   };
@@ -43,7 +43,7 @@ const Index = () => {
           onChange={(e) => setDomain(e.target.value)}
         />
         <Button onClick={fetchWhoisData} colorScheme="blue">Search</Button>
-        {error && error !== "Failed to fetch WHOIS data" && <Text color="red.500">{error}</Text>}
+        {error && hasSearched && error !== "Failed to fetch WHOIS data" && <Text color="red.500">{error}</Text>}
         {hasSearched && error && (
           <Box p={4} bg="gray.100" borderRadius="md" width="100%">
             <Flex align="center" justify="space-between">
