@@ -46,14 +46,17 @@ const Index = () => {
 
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center" mt={8}>
-      <VStack spacing={4} width="100%">
-        <Input
-          placeholder="Enter domain"
-          value={domain}
-          onChange={(e) => setDomain(e.target.value)}
-        />
-        <Button onClick={fetchWhoisData} colorScheme="blue">Search</Button>
-        
+      <Box position="fixed" top={0} width="100%" bg="white" zIndex={1} p={4} boxShadow="md">
+        <VStack spacing={4} width="100%">
+          <Input
+            placeholder="Enter domain"
+            value={domain}
+            onChange={(e) => setDomain(e.target.value)}
+          />
+          <Button onClick={fetchWhoisData} colorScheme="blue">Search</Button>
+        </VStack>
+      </Box>
+      <Box mt={24} width="100%" overflowY="auto" maxHeight="80vh">
         {hasSearched && error && (
           <Box p={4} bg="gray.100" borderRadius="md" width="100%">
             <Flex align="center" justify="space-between">
@@ -103,7 +106,7 @@ const Index = () => {
             ))}
           </Box>
         )}
-      </VStack>
+      </Box>
     </Container>
   );
 };
