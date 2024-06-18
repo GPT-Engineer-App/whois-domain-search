@@ -4,12 +4,14 @@ import { Container, Text, VStack, Input, Button, Box, Flex, Heading } from "@cha
 const Index = () => {
   const [domain, setDomain] = useState("");
   const [whoisData, setWhoisData] = useState(null);
+  const [multiWhoisData, setMultiWhoisData] = useState([]);
   const [error, setError] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
 
   const fetchWhoisData = async () => {
     setError(null); // Clear the error message before initiating a new search
     setWhoisData(null);
+    setMultiWhoisData([]);
     setHasSearched(false);
     try {
       const response = await fetch(`https://who-dat.as93.net/${domain}`);
@@ -19,6 +21,14 @@ const Index = () => {
       const data = await response.json();
       setWhoisData(data);
       setHasSearched(true);
+
+      if (!data.available) {
+        const sld = domain.split('.')[0];
+        const tlds = ['co', 'ai', 'io', 'org', 'net', 'xyz', 'info'];
+        const multiResponses = await Promise.all(tlds.map(tld => fetch(`https://who-dat.as93.net/${sld}.${tld}`)));
+        const multiData = await Promise.all(multiResponses.map(res => res.json()));
+        setMultiWhoisData(multiData.map((data, index) => ({ ...data, domain: `${sld}.${tlds[index]}` })));
+      }
     } catch (err) {
       setError(err.message);
       setWhoisData(null); // Ensure whoisData is null on error
@@ -70,6 +80,22 @@ const Index = () => {
               </Box>
               <Button colorScheme="teal">Add to Cart</Button>
             </Flex>
+          </Box>
+        )}
+        {whoisData && !whoisData.available && multiWhoisData.length > 0 && (
+          <Box width="100%">
+            <Heading size="md" mb={4}>Try these instead</Heading>
+            {multiWhoisData.map((data, index) => (
+              <Box key={index} p={4} bg="gray.100" borderRadius="md" mb={4}>
+                <Flex align="center" justify="space-between">
+                  <Box>
+                    <Text fontSize="xl" fontWeight="bold">{data.domain}</Text>
+                    <Text color={data.available ? "green.500" : "red.500"}>{data.available ? "Available" : "Unavailable"}</Text>
+                  </Box>
+                  <Button colorScheme="teal">{data.available ? "Add to Cart" : "Try to Purchase This Domain Anyway"}</Button>
+                </Flex>
+              </Box>
+            ))}
           </Box>
         )}
       </VStack>
