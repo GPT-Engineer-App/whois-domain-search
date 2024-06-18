@@ -30,8 +30,8 @@ const Index = () => {
   const isDomainAvailable = whoisData === null && !error;
 
   return (
-    <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-      <Flex justifyContent="space-between" width="100%" p={4} bg="gray.100" mb={4}>
+    <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center" mt="16">
+      <Flex justifyContent="space-between" width="100%" p={4} bg="gray.100" mb={4} position="fixed" top="0" left="0" right="0" zIndex="1000">
         <Heading size="md">Domain Checker</Heading>
         <IconButton icon={<FaShoppingCart />} aria-label="Cart" />
       </Flex>
@@ -43,7 +43,7 @@ const Index = () => {
           onChange={(e) => setDomain(e.target.value)}
         />
         <Button onClick={fetchWhoisData} colorScheme="blue">Search</Button>
-        {error && <Text color="red.500">{error}</Text>}
+        {error && error !== "Failed to fetch WHOIS data" && <Text color="red.500">{error}</Text>}
         {hasSearched && error && (
           <Box p={4} bg="gray.100" borderRadius="md" width="100%">
             <Flex align="center" justify="space-between">
