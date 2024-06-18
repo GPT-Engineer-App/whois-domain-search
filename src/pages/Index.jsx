@@ -62,9 +62,9 @@ const Index = () => {
             <Flex align="center" justify="space-between">
               <Box>
                 <Text fontSize="xl" fontWeight="bold">{domain}</Text>
-                <Text color="green.500">Available</Text>
+                <Text color="red.500">Unavailable</Text>
               </Box>
-              <Button colorScheme="teal">Add to Cart</Button>
+              <Button colorScheme="teal">Try to Purchase This Domain Anyway</Button>
             </Flex>
           </Box>
         )}
@@ -73,9 +73,9 @@ const Index = () => {
             <Flex align="center" justify="space-between">
               <Box>
                 <Text fontSize="xl" fontWeight="bold">{domain}</Text>
-                <Text color="red.500">Unavailable</Text>
+                <Text color={whoisData.available ? "green.500" : "red.500"}>{whoisData.available ? "Available" : "Unavailable"}</Text>
               </Box>
-              <Button colorScheme="teal">Try to Purchase This Domain Anyway</Button>
+              <Button colorScheme="teal">{whoisData.available ? "Add to Cart" : "Try to Purchase This Domain Anyway"}</Button>
             </Flex>
           </Box>
         )}
