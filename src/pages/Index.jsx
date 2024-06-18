@@ -9,7 +9,7 @@ const Index = () => {
   const [hasSearched, setHasSearched] = useState(false);
 
   const fetchWhoisData = async () => {
-    setError(null);
+    setError(null); // Clear the error message before initiating a new search
     setWhoisData(null);
     setHasSearched(false);
     try {
@@ -43,7 +43,7 @@ const Index = () => {
           onChange={(e) => setDomain(e.target.value)}
         />
         <Button onClick={fetchWhoisData} colorScheme="blue">Search</Button>
-        {error && error !== "Failed to fetch WHOIS data" && <Text color="red.500">{error}</Text>}
+        
         {hasSearched && error && (
           <Box p={4} bg="gray.100" borderRadius="md" width="100%">
             <Flex align="center" justify="space-between">
