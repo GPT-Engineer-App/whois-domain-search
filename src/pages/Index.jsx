@@ -25,19 +25,16 @@ const Index = () => {
     return (
       <Box p={4} bg="gray.100" borderRadius="md" width="100%">
         <Heading size="md" mb={2}>WHOIS Data:</Heading>
-        {Object.keys(data).map((key) => (
-          <Box key={key} mb={4}>
-            <Heading size="sm" mb={1}>{key}</Heading>
-            {typeof data[key] === 'object' ? (
-              <Box pl={4} borderLeft="2px solid #ccc">
-                {renderWhoisData(data[key])}
-              </Box>
-            ) : (
-              <Code>{JSON.stringify(data[key], null, 2)}</Code>
-            )}
-            <Divider mt={2} />
-          </Box>
-        ))}
+        <Code whiteSpace="pre-wrap" wordBreak="break-all">
+          {JSON.stringify(data, (key, value) => {
+            if (typeof value === 'object' && value !== null) {
+              if (value.address) {
+                return value.address;
+              }
+            }
+            return value;
+          }, 2)}
+        </Code>
       </Box>
     );
   };
