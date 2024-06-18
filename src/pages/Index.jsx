@@ -7,12 +7,14 @@ const Index = () => {
   const [multiWhoisData, setMultiWhoisData] = useState([]);
   const [error, setError] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const [isMultiQueryComplete, setIsMultiQueryComplete] = useState(false);
 
   const fetchWhoisData = async () => {
     setError(null); // Clear the error message before initiating a new search
     setWhoisData(null);
     setMultiWhoisData([]);
     setHasSearched(false);
+    setIsMultiQueryComplete(false);
     try {
       const response = await fetch(`https://who-dat.as93.net/${domain}`);
       if (!response.ok) {
@@ -28,19 +30,22 @@ const Index = () => {
         const multiResponses = await Promise.all(tlds.map(tld => fetch(`https://who-dat.as93.net/${sld}.${tld}`)));
         const multiData = await Promise.all(multiResponses.map(res => res.json()));
         setMultiWhoisData(multiData.map((data, index) => ({ ...data, domain: `${sld}.${tlds[index]}` })));
+        setIsMultiQueryComplete(true);
+      } else {
+        setIsMultiQueryComplete(true);
       }
     } catch (err) {
       setError(err.message);
       setWhoisData(null); // Ensure whoisData is null on error
       setHasSearched(true);
+      setIsMultiQueryComplete(true);
     }
   };
 
   const isDomainAvailable = whoisData === null && !error;
 
   return (
-    <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center" mt="16">
-      
+    <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center" mt={8}>
       <VStack spacing={4} width="100%">
         <Input
           placeholder="Enter domain"
@@ -60,7 +65,7 @@ const Index = () => {
             </Flex>
           </Box>
         )}
-        {hasSearched && whoisData && (
+        {hasSearched && whoisData && isMultiQueryComplete && (
           <Box p={4} bg="gray.100" borderRadius="md" width="100%">
             <Flex align="center" justify="space-between">
               <Box>
@@ -71,7 +76,7 @@ const Index = () => {
             </Flex>
           </Box>
         )}
-        {hasSearched && isDomainAvailable && (
+        {hasSearched && isDomainAvailable && isMultiQueryComplete && (
           <Box p={4} bg="gray.100" borderRadius="md" width="100%">
             <Flex align="center" justify="space-between">
               <Box>
