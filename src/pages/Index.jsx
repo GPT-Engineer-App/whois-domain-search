@@ -24,16 +24,17 @@ const Index = () => {
       setWhoisData(data);
       setHasSearched(true);
 
-      if (!data.available) {
+      if (data.available === undefined) {
+        // If WHOIS information is not present, set status to "available"
+        setWhoisData({ available: true });
+      } else if (!data.available) {
         const sld = domain.split('.')[0];
         const tlds = ['co', 'ai', 'io', 'org', 'net', 'xyz', 'info'];
         const multiResponses = await Promise.all(tlds.map(tld => fetch(`https://who-dat.as93.net/${sld}.${tld}`)));
         const multiData = await Promise.all(multiResponses.map(res => res.json()));
         setMultiWhoisData(multiData.map((data, index) => ({ ...data, domain: `${sld}.${tlds[index]}` })));
-        setIsMultiQueryComplete(true);
-      } else {
-        setIsMultiQueryComplete(true);
       }
+      setIsMultiQueryComplete(true);
     } catch (err) {
       setError(err.message);
       setWhoisData(null); // Ensure whoisData is null on error
@@ -62,13 +63,24 @@ const Index = () => {
             <Flex align="center" justify="space-between">
               <Box>
                 <Text fontSize="xl" fontWeight="bold">{domain}</Text>
+                <Text color="red.500">Unavailable</Text>
+              </Box>
+              <Button colorScheme="teal">Try to Purchase This Domain Anyway</Button>
+            </Flex>
+          </Box>
+        )}
+        {hasSearched && whoisData && whoisData.available && isMultiQueryComplete && (
+          <Box p={4} bg="gray.100" borderRadius="md" width="100%">
+            <Flex align="center" justify="space-between">
+              <Box>
+                <Text fontSize="xl" fontWeight="bold">{domain}</Text>
                 <Text color="green.500">Available</Text>
               </Box>
               <Button colorScheme="teal">Add to Cart</Button>
             </Flex>
           </Box>
         )}
-        {hasSearched && whoisData && isMultiQueryComplete && (
+        {hasSearched && whoisData && !whoisData.available && isMultiQueryComplete && (
           <Box p={4} bg="gray.100" borderRadius="md" width="100%">
             <Flex align="center" justify="space-between">
               <Box>
