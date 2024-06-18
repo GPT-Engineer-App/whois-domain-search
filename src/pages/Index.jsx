@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Text, VStack, Input, Button, Box, Code, Heading, Divider, Stack } from "@chakra-ui/react";
+import { Container, Text, VStack, Input, Button, Box, Code } from "@chakra-ui/react";
 
 const Index = () => {
   const [domain, setDomain] = useState("");
@@ -21,42 +21,6 @@ const Index = () => {
     }
   };
 
-  const renderWhoisData = (data) => {
-    const renderField = (label, value) => (
-      <Box mb={2}>
-        <Text as="span" fontWeight="bold">{label}: </Text>
-        <Text as="span">{value}</Text>
-      </Box>
-    );
-
-    const renderObject = (obj, parentKey = "") => {
-      return Object.keys(obj).map((key) => {
-        const value = obj[key];
-        const label = parentKey ? `${parentKey}.${key}` : key;
-
-        if (typeof value === "object" && value !== null) {
-          return (
-            <Box key={label} ml={4}>
-              <Text fontWeight="bold">{label}:</Text>
-              {renderObject(value, label)}
-            </Box>
-          );
-        }
-
-        return <Box key={label}>{renderField(label, value)}</Box>;
-      });
-    };
-
-    return (
-      <Box p={4} bg="gray.100" borderRadius="md" width="100%" maxHeight="400px" overflowY="auto" mt={4}>
-        <Heading size="md" mb={2}>WHOIS Data:</Heading>
-        <Stack spacing={2}>
-          {renderObject(data)}
-        </Stack>
-      </Box>
-    );
-  };
-
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
       <VStack spacing={4}>
@@ -68,7 +32,12 @@ const Index = () => {
         />
         <Button onClick={fetchWhoisData} colorScheme="blue">Search</Button>
         {error && <Text color="red.500">{error}</Text>}
-        {whoisData && renderWhoisData(whoisData)}
+        {whoisData && (
+          <Box p={4} bg="gray.100" borderRadius="md" width="100%">
+            <Text fontSize="lg" mb={2}>WHOIS Data:</Text>
+            <Code>{JSON.stringify(whoisData, null, 2)}</Code>
+          </Box>
+        )}
       </VStack>
     </Container>
   );
