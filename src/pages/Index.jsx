@@ -31,20 +31,31 @@ const Index = () => {
 
   const isDomainAvailable = whoisData === null && !error;
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      fetchWhoisData();
+    }
+  };
+
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center" mt="16">
       
-      <Flex spacing={4} width="100%">
+      <Flex spacing={4} width="100%" mb={4}>
         <Input
           placeholder="Enter domain"
           value={domain}
           onChange={(e) => setDomain(e.target.value)}
+          onKeyPress={handleKeyPress}
           flex="1"
           mr={2}
         />
         <Button onClick={fetchWhoisData} colorScheme="blue">Search</Button>
       </Flex>
       
+      {hasSearched && (
+        <Text fontSize="2xl" mb={4}>Search Results:</Text>
+      )}
+
       {hasSearched && error && (
         <Box p={4} bg="gray.100" borderRadius="md" width="100%">
           <Flex align="center" justify="space-between">
