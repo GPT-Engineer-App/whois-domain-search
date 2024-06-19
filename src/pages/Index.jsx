@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Container, Text, Input, Button, Box, Flex, Heading } from "@chakra-ui/react";
-import validTLDs from '../utils/validTLDs';
+import fetchValidTLDs from '../utils/validTLDs';
 
 const Index = () => {
   const [domain, setDomain] = useState("");
@@ -15,6 +15,9 @@ const Index = () => {
     setWhoisData(null);
     setHasSearched(false);
     setInvalidUrl(false); // Reset invalid URL state
+
+    // Fetch the list of valid TLDs
+    const validTLDs = await fetchValidTLDs();
 
     // Validate the domain TLD
     const domainParts = domain.split('.');
