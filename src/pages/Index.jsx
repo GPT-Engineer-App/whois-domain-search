@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Container, Text, Input, Button, Box, Flex, Heading } from "@chakra-ui/react";
+import validTLDs from '../utils/validTLDs';
 
 const Index = () => {
   const [domain, setDomain] = useState("");
@@ -7,11 +8,22 @@ const Index = () => {
   const [whoisData, setWhoisData] = useState(null);
   const [error, setError] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const [invalidUrl, setInvalidUrl] = useState(false); // New state for invalid URL
 
   const fetchWhoisData = async () => {
     setError(null); // Clear the error message before initiating a new search
     setWhoisData(null);
     setHasSearched(false);
+    setInvalidUrl(false); // Reset invalid URL state
+
+    // Validate the domain TLD
+    const domainParts = domain.split('.');
+    const tld = `.${domainParts[domainParts.length - 1]}`;
+    if (!validTLDs.includes(tld)) {
+      setInvalidUrl(true);
+      return;
+    }
+
     try {
       const response = await fetch(`https://who-dat.as93.net/${domain}`);
       if (!response.ok) {
@@ -39,6 +51,11 @@ const Index = () => {
 
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center" mt="16">
+      {invalidUrl && (
+        <Box bg="red.500" color="white" p={4} mb={4} borderRadius="md" width="100%" textAlign="center">
+          Invalid URL - please enter a valid domain name
+        </Box>
+      )}
       
       <Flex spacing={4} width="100%" mb={4}>
         <Input
