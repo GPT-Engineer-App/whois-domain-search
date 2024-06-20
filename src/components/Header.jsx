@@ -6,7 +6,11 @@ const Header = () => {
   return (
     <Box bg="blue.500" p={4} color="white">
       <Flex align="center">
-        <Heading size="md">Registrar</Heading>
+        <Heading size="md">
+          <Link as={RouterLink} to="/" color="white" _hover={{ textDecoration: 'none' }}>
+            Registrar
+          </Link>
+        </Heading>
         <Spacer />
         <Link as={RouterLink} to="/tools" mx={2}>
           <IconButton
@@ -15,6 +19,24 @@ const Header = () => {
             variant="ghost"
             colorScheme="whiteAlpha"
             aria-label="Tools"
+          />
+        </Link>
+        <Link as={RouterLink} to="/cart" mx={2}>
+          <IconButton
+            icon={<FaShoppingCart />}
+            isRound
+            variant="ghost"
+            colorScheme="whiteAlpha"
+            aria-label="Cart"
+          />
+        </Link>
+        <Link as={RouterLink} to="/profile" mx={2}>
+          <IconButton
+            icon={<FaUserCircle />}
+            isRound
+            variant="ghost"
+            colorScheme="whiteAlpha"
+            aria-label="Profile"
           />
         </Link>
         <Link as={RouterLink} to="/cart" mx={2}>
