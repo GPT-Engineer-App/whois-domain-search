@@ -57,7 +57,7 @@ const Header = () => {
             aria-label="Cart"
             onClick={toggleMenu}
           />
-          <MenuList minWidth="240px" color="black">
+          <MenuList minWidth="360px" color="black">
             {cartItems.length === 0 ? (
               <MenuItem>No items in cart</MenuItem>
             ) : (
