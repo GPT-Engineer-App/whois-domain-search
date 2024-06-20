@@ -39,24 +39,6 @@ const Header = () => {
             aria-label="Profile"
           />
         </Link>
-        <Link as={RouterLink} to="/cart" mx={2}>
-          <IconButton
-            icon={<FaShoppingCart />}
-            isRound
-            variant="ghost"
-            colorScheme="whiteAlpha"
-            aria-label="Cart"
-          />
-        </Link>
-        <Link as={RouterLink} to="/profile" mx={2}>
-          <IconButton
-            icon={<FaUserCircle />}
-            isRound
-            variant="ghost"
-            colorScheme="whiteAlpha"
-            aria-label="Profile"
-          />
-        </Link>
       </Flex>
     </Box>
   );
