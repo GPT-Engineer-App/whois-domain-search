@@ -57,12 +57,12 @@ const Header = () => {
             aria-label="Cart"
             onClick={toggleMenu}
           />
-          <MenuList minWidth="240px">
+          <MenuList minWidth="240px" color="black">
             {cartItems.length === 0 ? (
               <MenuItem>No items in cart</MenuItem>
             ) : (
               <>
-                <MenuItem>
+                <MenuItem pointerEvents="none">
                   <Flex justify="space-between" width="100%">
                     <Text fontWeight="bold" flex="1" textAlign="left">Name</Text>
                     <Text fontWeight="bold" flex="1" textAlign="left">Price</Text>
@@ -71,7 +71,7 @@ const Header = () => {
                 </MenuItem>
                 {cartItems.map((item, index) => (
                   <MenuItem key={index}>
-                    <Flex justify="space-between" width="100%">
+                    <Flex justify="space-between" width="100%" gap="10px">
                       <Text flex="1" textAlign="left">{item.name}</Text>
                       <Text flex="1" textAlign="left">${item.price} per year</Text>
                       <IconButton
