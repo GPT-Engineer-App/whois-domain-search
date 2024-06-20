@@ -57,34 +57,34 @@ const Header = () => {
             aria-label="Cart"
             onClick={toggleMenu}
           />
-          <MenuList minWidth="540px" color="black" textAlign="center"> {/* Centered content */}
+          <MenuList minWidth="540px" color="black"> {/* Increased width by 50% */}
             {cartItems.length === 0 ? (
-              <MenuItem justifyContent="center">No items in cart</MenuItem>
+              <MenuItem>No items in cart</MenuItem>
             ) : (
               <>
-                <MenuItem pointerEvents="none" justifyContent="center">
-                  <Flex justify="center" width="100%">
-                    <Text fontWeight="bold" flex="1" textAlign="center">Name</Text>
-                    <Text fontWeight="bold" flex="1" textAlign="center">Price</Text>
-                    <Text fontWeight="bold" flex="1" textAlign="center">Remove</Text>
+                <MenuItem pointerEvents="none">
+                <Flex justify="space-between" width="100%">
+                  <Text fontWeight="bold" flex="1" textAlign="left">Name</Text>
+                  <Text fontWeight="bold" flex="1" textAlign="left">Price</Text>
+                  <Text fontWeight="bold" flex="1" textAlign="left">Remove</Text>
+                </Flex>
+              </MenuItem>
+              {cartItems.map((item, index) => (
+                <MenuItem key={index}>
+                  <Flex justify="space-between" width="100%">
+                    <Text flex="1" textAlign="left">{item.name}</Text>
+                    <Text flex="1" textAlign="left">${item.price} per year</Text>
+                    <IconButton
+                      icon={<FaTrash />}
+                      size="sm"
+                      colorScheme="red"
+                      onClick={() => removeFromCart(index)}
+                      aria-label="Remove item"
+                    />
                   </Flex>
                 </MenuItem>
-                {cartItems.map((item, index) => (
-                  <MenuItem key={index} justifyContent="center">
-                    <Flex justify="center" width="100%">
-                      <Text flex="1" textAlign="center">{item.name}</Text>
-                      <Text flex="1" textAlign="center">${item.price} per year</Text>
-                      <IconButton
-                        icon={<FaTrash />}
-                        size="sm"
-                        colorScheme="red"
-                        onClick={() => removeFromCart(index)}
-                        aria-label="Remove item"
-                      />
-                    </Flex>
-                  </MenuItem>
-                ))}
-                <MenuItem justifyContent="center">
+              ))}
+                <MenuItem>
                   <Button colorScheme="blue" width="100%">Checkout</Button>
                 </MenuItem>
               </>
