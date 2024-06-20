@@ -1,17 +1,18 @@
 import { useContext, useState } from 'react';
-import { Box, Flex, Heading, Spacer, Link, IconButton, Menu, MenuButton, MenuList, MenuItem, Text } from "@chakra-ui/react";
-import { FaShoppingCart, FaUserCircle, FaTools } from "react-icons/fa";
+import { Box, Flex, Heading, Spacer, Link, IconButton, Menu, MenuButton, MenuList, MenuItem, Text, Badge } from "@chakra-ui/react";
+import { FaShoppingCart, FaUserCircle, FaTools, FaTrash } from "react-icons/fa";
 import { Link as RouterLink } from "react-router-dom";
 
 import { CartContext } from '../context/CartContext';
 
 const Header = () => {
-  const { cartItems } = useContext(CartContext);
+  const { cartItems, removeFromCart } = useContext(CartContext);
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+
   return (
     <Box bg="blue.500" p={4} color="white">
       <Flex align="center">
@@ -33,7 +34,23 @@ const Header = () => {
         <Menu isOpen={isOpen} onClose={toggleMenu}>
           <MenuButton
             as={IconButton}
-            icon={<FaShoppingCart />}
+            icon={
+              <Box position="relative">
+                <FaShoppingCart />
+                {cartItems.length > 0 && !isOpen && (
+                  <Badge
+                    colorScheme="red"
+                    borderRadius="full"
+                    position="absolute"
+                    top="-1"
+                    right="-1"
+                    fontSize="0.8em"
+                  >
+                    {cartItems.length}
+                  </Badge>
+                )}
+              </Box>
+            }
             isRound
             variant="ghost"
             colorScheme="whiteAlpha"
@@ -47,8 +64,15 @@ const Header = () => {
               cartItems.map((item, index) => (
                 <MenuItem key={index}>
                   <Flex justify="space-between" width="100%">
-                    <Text>{item}</Text>
-                    <Text>${13} per year</Text>
+                    <Text>{item.name}</Text>
+                    <Text>${item.price} per year</Text>
+                    <IconButton
+                      icon={<FaTrash />}
+                      size="sm"
+                      colorScheme="red"
+                      onClick={() => removeFromCart(index)}
+                      aria-label="Remove item"
+                    />
                   </Flex>
                 </MenuItem>
               ))

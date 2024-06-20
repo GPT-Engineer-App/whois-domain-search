@@ -55,7 +55,7 @@ const Index = () => {
   };
 
   const handleAddToCart = () => {
-    addToCart(searchedDomain);
+    addToCart({ name: searchedDomain, price: 13 });
   };
 
   return (
@@ -89,7 +89,7 @@ const Index = () => {
               <Text fontSize="xl" fontWeight="bold">{searchedDomain}</Text> {/* Use searchedDomain */}
               <Text color="green.500">Available</Text>
             </Box>
-            <Button colorScheme="teal">Add to Cart</Button>
+            <Button colorScheme="teal" onClick={handleAddToCart}>Add to Cart</Button>
           </Flex>
         </Box>
       )}
