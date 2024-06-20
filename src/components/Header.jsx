@@ -1,8 +1,17 @@
-import { Box, Flex, Heading, Spacer, Link, IconButton } from "@chakra-ui/react";
+import { useContext, useState } from 'react';
+import { Box, Flex, Heading, Spacer, Link, IconButton, Menu, MenuButton, MenuList, MenuItem, Text } from "@chakra-ui/react";
 import { FaShoppingCart, FaUserCircle, FaTools } from "react-icons/fa";
 import { Link as RouterLink } from "react-router-dom";
 
+import { CartContext } from '../context/CartContext';
+
 const Header = () => {
+  const { cartItems } = useContext(CartContext);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
   return (
     <Box bg="blue.500" p={4} color="white">
       <Flex align="center">
@@ -21,15 +30,31 @@ const Header = () => {
             aria-label="Tools"
           />
         </Link>
-        <Link as={RouterLink} to="/cart" mx={2}>
-          <IconButton
+        <Menu isOpen={isOpen} onClose={toggleMenu}>
+          <MenuButton
+            as={IconButton}
             icon={<FaShoppingCart />}
             isRound
             variant="ghost"
             colorScheme="whiteAlpha"
             aria-label="Cart"
+            onClick={toggleMenu}
           />
-        </Link>
+          <MenuList>
+            {cartItems.length === 0 ? (
+              <MenuItem>No items in cart</MenuItem>
+            ) : (
+              cartItems.map((item, index) => (
+                <MenuItem key={index}>
+                  <Flex justify="space-between" width="100%">
+                    <Text>{item}</Text>
+                    <Text>${13} per year</Text>
+                  </Flex>
+                </MenuItem>
+              ))
+            )}
+          </MenuList>
+        </Menu>
         <Link as={RouterLink} to="/profile" mx={2}>
           <IconButton
             icon={<FaUserCircle />}

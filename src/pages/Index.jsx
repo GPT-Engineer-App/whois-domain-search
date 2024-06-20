@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Container, Text, Input, Button, Box, Flex, Heading } from "@chakra-ui/react";
 import fetchValidTLDs from '../utils/validTLDs';
+import { CartContext } from '../context/CartContext';
 
 const Index = () => {
   const [domain, setDomain] = useState("");
@@ -9,6 +10,7 @@ const Index = () => {
   const [error, setError] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
   const [invalidUrl, setInvalidUrl] = useState(false); // New state for invalid URL
+  const { addToCart } = useContext(CartContext);
 
   const fetchWhoisData = async () => {
     setError(null); // Clear the error message before initiating a new search
@@ -50,6 +52,10 @@ const Index = () => {
     if (e.key === "Enter") {
       fetchWhoisData();
     }
+  };
+
+  const handleAddToCart = () => {
+    addToCart(searchedDomain);
   };
 
   return (
@@ -105,7 +111,7 @@ const Index = () => {
               <Text fontSize="xl" fontWeight="bold">{searchedDomain}</Text> {/* Use searchedDomain */}
               <Text color="green.500">Available</Text>
             </Box>
-            <Button colorScheme="teal">Add to Cart</Button>
+            <Button colorScheme="teal" onClick={handleAddToCart}>Add to Cart</Button>
           </Flex>
         </Box>
       )}
