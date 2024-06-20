@@ -6,6 +6,10 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
   const addToCart = (item) => {
+    // Prevent duplicate additions of the same domain name
+    if (cartItems.some(cartItem => cartItem.name === item.name)) {
+      return;
+    }
     setCartItems([...cartItems, item]);
   };
 

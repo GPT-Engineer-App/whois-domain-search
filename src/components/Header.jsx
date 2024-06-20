@@ -57,25 +57,34 @@ const Header = () => {
             aria-label="Cart"
             onClick={toggleMenu}
           />
-          <MenuList>
+          <MenuList minWidth="240px">
             {cartItems.length === 0 ? (
               <MenuItem>No items in cart</MenuItem>
             ) : (
-              cartItems.map((item, index) => (
-                <MenuItem key={index}>
+              <>
+                <MenuItem>
                   <Flex justify="space-between" width="100%">
-                    <Text>{item.name}</Text>
-                    <Text>${item.price} per year</Text>
-                    <IconButton
-                      icon={<FaTrash />}
-                      size="sm"
-                      colorScheme="red"
-                      onClick={() => removeFromCart(index)}
-                      aria-label="Remove item"
-                    />
+                    <Text fontWeight="bold" flex="1" textAlign="left">Name</Text>
+                    <Text fontWeight="bold" flex="1" textAlign="left">Price</Text>
+                    <Text fontWeight="bold" flex="1" textAlign="left">Remove</Text>
                   </Flex>
                 </MenuItem>
-              ))
+                {cartItems.map((item, index) => (
+                  <MenuItem key={index}>
+                    <Flex justify="space-between" width="100%">
+                      <Text flex="1" textAlign="left">{item.name}</Text>
+                      <Text flex="1" textAlign="left">${item.price} per year</Text>
+                      <IconButton
+                        icon={<FaTrash />}
+                        size="sm"
+                        colorScheme="red"
+                        onClick={() => removeFromCart(index)}
+                        aria-label="Remove item"
+                      />
+                    </Flex>
+                  </MenuItem>
+                ))}
+              </>
             )}
           </MenuList>
         </Menu>
