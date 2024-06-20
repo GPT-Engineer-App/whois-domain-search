@@ -65,8 +65,8 @@ const Header = () => {
                 <MenuItem pointerEvents="none">
                 <Flex justify="space-between" width="100%">
                   <Text fontWeight="bold" flex="1" textAlign="left">Name</Text>
-                  <Text fontWeight="bold" flex="1" textAlign="left">Price</Text>
-                  <Text fontWeight="bold" flex="1" textAlign="left">Remove</Text>
+                  <Text fontWeight="bold" flex="1" textAlign="right" color="gray.500">Price</Text>
+                  <Text fontWeight="bold" flex="1" textAlign="right" color="gray.500">Remove</Text>
                 </Flex>
               </MenuItem>
               {cartItems.map((item, index) => (
