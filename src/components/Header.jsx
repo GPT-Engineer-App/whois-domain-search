@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Box, Flex, Heading, Spacer, Link, IconButton, Menu, MenuButton, MenuList, MenuItem, Text, Badge } from "@chakra-ui/react";
+import { Box, Flex, Heading, Spacer, Link, IconButton, Menu, MenuButton, MenuList, MenuItem, Text, Badge, Button } from "@chakra-ui/react";
 import { FaShoppingCart, FaUserCircle, FaTools, FaTrash } from "react-icons/fa";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -57,7 +57,7 @@ const Header = () => {
             aria-label="Cart"
             onClick={toggleMenu}
           />
-          <MenuList minWidth="360px" color="black">
+          <MenuList minWidth="540px" color="black"> {/* Increased width by 50% */}
             {cartItems.length === 0 ? (
               <MenuItem>No items in cart</MenuItem>
             ) : (
@@ -84,6 +84,9 @@ const Header = () => {
                     </Flex>
                   </MenuItem>
                 ))}
+                <MenuItem>
+                  <Button colorScheme="blue" width="100%">Checkout</Button>
+                </MenuItem>
               </>
             )}
           </MenuList>
