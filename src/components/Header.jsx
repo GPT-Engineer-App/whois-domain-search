@@ -63,27 +63,27 @@ const Header = () => {
             ) : (
               <>
                 <MenuItem pointerEvents="none">
+                <Flex justify="space-between" width="100%">
+                  <Text fontWeight="bold" flex="1" textAlign="left">Name</Text>
+                  <Text fontWeight="bold" flex="1" textAlign="left">Price</Text>
+                  <Text fontWeight="bold" flex="1" textAlign="left">Remove</Text>
+                </Flex>
+              </MenuItem>
+              {cartItems.map((item, index) => (
+                <MenuItem key={index}>
                   <Flex justify="space-between" width="100%">
-                    <Text fontWeight="bold" flex="1" textAlign="left">Name</Text>
-                    <Text fontWeight="bold" flex="1" textAlign="left">Price</Text>
-                    <Text fontWeight="bold" flex="1" textAlign="left">Remove</Text>
+                    <Text flex="1" textAlign="left">{item.name}</Text>
+                    <Text flex="1" textAlign="left">${item.price} per year</Text>
+                    <IconButton
+                      icon={<FaTrash />}
+                      size="sm"
+                      colorScheme="red"
+                      onClick={() => removeFromCart(index)}
+                      aria-label="Remove item"
+                    />
                   </Flex>
                 </MenuItem>
-                {cartItems.map((item, index) => (
-                  <MenuItem key={index}>
-                    <Flex justify="space-between" width="100%" gap="10px">
-                      <Text flex="1" textAlign="left">{item.name}</Text>
-                      <Text flex="1" textAlign="left">${item.price} per year</Text>
-                      <IconButton
-                        icon={<FaTrash />}
-                        size="sm"
-                        colorScheme="red"
-                        onClick={() => removeFromCart(index)}
-                        aria-label="Remove item"
-                      />
-                    </Flex>
-                  </MenuItem>
-                ))}
+              ))}
                 <MenuItem>
                   <Button colorScheme="blue" width="100%">Checkout</Button>
                 </MenuItem>
