@@ -22,16 +22,15 @@ const Index = () => {
     setHasSearched(false);
     setInvalidUrl(false);
 
-    const validTLDs = await fetchValidTLDs();
-
-    const domainParts = domain.split('.');
-    const tld = `.${domainParts[domainParts.length - 1]}`;
-    if (!validTLDs.includes(tld)) {
-      setInvalidUrl(true);
-      return;
-    }
-
     try {
+      const validTLDs = await fetchValidTLDs();
+      const domainParts = domain.split('.');
+      const tld = `.${domainParts[domainParts.length - 1]}`;
+      if (!validTLDs.includes(tld)) {
+        setInvalidUrl(true);
+        return;
+      }
+
       const response = await fetch(`https://who-dat.as93.net/${domain}`);
       if (!response.ok) {
         throw new Error("Failed to fetch WHOIS data");
