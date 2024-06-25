@@ -56,12 +56,16 @@ const Index = () => {
       return;
     }
     try {
-      const response = await fetch(`https://who-dat.as93.net/multi?domains=${domains.join(',')}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch WHOIS data");
+      const results = [];
+      for (const domain of domains) {
+        const response = await fetch(`https://who-dat.as93.net/${domain}`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch WHOIS data for ${domain}`);
+        }
+        const data = await response.json();
+        results.push(data);
       }
-      const data = await response.json();
-      setBulkResults(data);
+      setBulkResults(results);
     } catch (err) {
       setBulkError(err.message);
     }
