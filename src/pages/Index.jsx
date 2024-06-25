@@ -1,5 +1,5 @@
-import { useState, useEffect, useContext } from "react";
-import { Container, Text, Input, Button, Box, Flex, Heading, Textarea } from "@chakra-ui/react";
+import { useState, useContext } from "react";
+import { Container, Text, Input, Button, Box, Flex, Textarea } from "@chakra-ui/react";
 import fetchValidTLDs from '../utils/validTLDs';
 import { CartContext } from '../context/CartContext';
 
