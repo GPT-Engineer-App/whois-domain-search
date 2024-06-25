@@ -57,10 +57,18 @@ const Index = () => {
     }
     try {
       const results = [];
+      const validTLDs = await fetchValidTLDs();
       for (const domain of domains) {
+        const domainParts = domain.split('.');
+        const tld = `.${domainParts[domainParts.length - 1]}`;
+        if (!validTLDs.includes(tld)) {
+          results.push({ domain, available: true });
+          continue;
+        }
         const response = await fetch(`https://who-dat.as93.net/${domain}`);
         if (!response.ok) {
-          throw new Error(`Failed to fetch WHOIS data for ${domain}`);
+          results.push({ domain, available: true });
+          continue;
         }
         const data = await response.json();
         results.push(data);
