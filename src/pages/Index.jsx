@@ -46,8 +46,8 @@ const Index = () => {
     }
   };
 
-  const validateDomain = (domain) => {
-    const validTLDs = fetchValidTLDs();
+  const validateDomain = async (domain) => {
+    const validTLDs = await fetchValidTLDs();
     const domainParts = domain.split('.');
     const tld = `.${domainParts[domainParts.length - 1]}`;
     return validTLDs.includes(tld);
@@ -56,7 +56,7 @@ const Index = () => {
   const fetchBulkWhoisData = async (domains) => {
     const results = [];
     for (const domain of domains) {
-      if (!validateDomain(domain)) {
+      if (!await validateDomain(domain)) {
         results.push({ domain, error: "Invalid URL" });
         continue;
       }
