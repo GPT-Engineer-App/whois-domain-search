@@ -114,6 +114,30 @@ const Index = () => {
       
       <Button onClick={onOpen} colorScheme="blue" mb={4}>Bulk Search</Button>
       
+      {bulkResults.length > 0 && (
+        <Box width="100%">
+          {bulkResults.map((result, index) => (
+            <Box key={index} p={4} bg="gray.100" borderRadius="md" width="100%" mb={1}>
+              <Flex align="center" justify="space-between">
+                <Box>
+                  <Text fontSize="xl" fontWeight="bold">{result.domain}</Text>
+                  {result.error ? (
+                    <Text color="red.500">{result.error}</Text>
+                  ) : (
+                    <Text color={result.data ? "red.500" : "green.500"}>
+                      {result.data ? "Unavailable" : "Available"}
+                    </Text>
+                  )}
+                </Box>
+                {!result.error && !result.data && (
+                  <Button colorScheme="teal" onClick={() => addToCart({ name: result.domain, price: 13 })}>Add to Cart</Button>
+                )}
+              </Flex>
+            </Box>
+          ))}
+        </Box>
+      )}
+      
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -128,10 +152,10 @@ const Index = () => {
             />
           </ModalBody>
           <ModalFooter>
+            <Button variant="ghost" onClick={onClose}>Cancel</Button>
             <Button colorScheme="blue" mr={3} onClick={handleBulkSubmit}>
               Submit
             </Button>
-            <Button variant="ghost" onClick={onClose}>Cancel</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -171,30 +195,6 @@ const Index = () => {
             </Box>
             <Button colorScheme="teal" onClick={handleAddToCart}>Add to Cart</Button>
           </Flex>
-        </Box>
-      )}
-      
-      {bulkResults.length > 0 && (
-        <Box width="100%">
-          {bulkResults.map((result, index) => (
-            <Box key={index} p={4} bg="gray.100" borderRadius="md" width="100%" mb={1}>
-              <Flex align="center" justify="space-between">
-                <Box>
-                  <Text fontSize="xl" fontWeight="bold">{result.domain}</Text>
-                  {result.error ? (
-                    <Text color="red.500">{result.error}</Text>
-                  ) : (
-                    <Text color={result.data ? "red.500" : "green.500"}>
-                      {result.data ? "Unavailable" : "Available"}
-                    </Text>
-                  )}
-                </Box>
-                {!result.error && !result.data && (
-                  <Button colorScheme="teal" onClick={() => addToCart({ name: result.domain, price: 13 })}>Add to Cart</Button>
-                )}
-              </Flex>
-            </Box>
-          ))}
         </Box>
       )}
     </Container>
