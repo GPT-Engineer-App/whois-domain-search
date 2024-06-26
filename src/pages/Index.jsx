@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { Container, Text, Input, Button, Box, Flex, Heading } from "@chakra-ui/react";
+import { Container, Text, Input, Button, Box, Flex, Heading, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure } from "@chakra-ui/react";
 import fetchValidTLDs from '../utils/validTLDs';
 import { CartContext } from '../context/CartContext';
 
@@ -10,10 +10,10 @@ const Index = () => {
   const [error, setError] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
   const [invalidUrl, setInvalidUrl] = useState(false);
-  const [bulkImport, setBulkImport] = useState(false); // New state for bulk import visibility
   const [bulkDomains, setBulkDomains] = useState(""); // New state for bulk import domains
   const [bulkResults, setBulkResults] = useState([]); // New state for bulk import results
   const { addToCart } = useContext(CartContext);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const fetchWhoisData = async () => {
     setError(null);
@@ -84,19 +84,10 @@ const Index = () => {
     addToCart({ name: searchedDomain, price: 13 });
   };
 
-  const handleBulkImport = () => {
-    setBulkImport(!bulkImport);
-  };
-
   const handleBulkSubmit = () => {
     const domains = bulkDomains.split('\n').map(domain => domain.trim()).filter(domain => domain);
     fetchBulkWhoisData(domains);
-  };
-
-  const handleBulkCancel = () => {
-    setBulkImport(false);
-    setBulkDomains("");
-    setBulkResults([]);
+    onClose();
   };
 
   const isDomainAvailable = whoisData === null && !error;
@@ -121,22 +112,29 @@ const Index = () => {
         <Button onClick={fetchWhoisData} colorScheme="blue">Search</Button>
       </Flex>
       
-      <Button onClick={handleBulkImport} colorScheme="blue" mb={4}>Bulk Import</Button>
+      <Button onClick={onOpen} colorScheme="blue" mb={4}>Bulk Import</Button>
       
-      {bulkImport && (
-        <Box width="100%" mb={4}>
-          <Input
-            placeholder="Enter domains, one per line"
-            value={bulkDomains}
-            onChange={(e) => setBulkDomains(e.target.value)}
-            mb={2}
-          />
-          <Flex justifyContent="space-between">
-            <Button onClick={handleBulkSubmit} colorScheme="blue">Submit</Button>
-            <Button onClick={handleBulkCancel} colorScheme="red">Cancel</Button>
-          </Flex>
-        </Box>
-      )}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Bulk Import Domains</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Input
+              placeholder="Enter domains, one per line"
+              value={bulkDomains}
+              onChange={(e) => setBulkDomains(e.target.value)}
+              mb={2}
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={handleBulkSubmit}>
+              Submit
+            </Button>
+            <Button variant="ghost" onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       
       {hasSearched && (
         <Text fontSize="2xl" mb={4} textAlign="left" width="100%">Search Results:</Text>
