@@ -9,19 +9,19 @@ const Index = () => {
   const [whoisData, setWhoisData] = useState(null);
   const [error, setError] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
-  const [invalidUrl, setInvalidUrl] = useState(false); // New state for invalid URL
+  const [invalidUrl, setInvalidUrl] = useState(false);
+  const [bulkImport, setBulkImport] = useState(false); // New state for bulk import visibility
+  const [bulkDomains, setBulkDomains] = useState(""); // New state for bulk import domains
+  const [bulkResults, setBulkResults] = useState([]); // New state for bulk import results
   const { addToCart } = useContext(CartContext);
 
   const fetchWhoisData = async () => {
-    setError(null); // Clear the error message before initiating a new search
+    setError(null);
     setWhoisData(null);
     setHasSearched(false);
-    setInvalidUrl(false); // Reset invalid URL state
+    setInvalidUrl(false);
 
-    // Fetch the list of valid TLDs
     const validTLDs = await fetchValidTLDs();
-
-    // Validate the domain TLD
     const domainParts = domain.split('.');
     const tld = `.${domainParts[domainParts.length - 1]}`;
     if (!validTLDs.includes(tld)) {
@@ -37,16 +37,42 @@ const Index = () => {
       const data = await response.json();
       setWhoisData(data);
       setHasSearched(true);
-      setSearchedDomain(domain); // Set the searched domain
+      setSearchedDomain(domain);
     } catch (err) {
       setError(err.message);
-      setWhoisData(null); // Ensure whoisData is null on error
+      setWhoisData(null);
       setHasSearched(true);
-      setSearchedDomain(domain); // Set the searched domain even on error
+      setSearchedDomain(domain);
     }
   };
 
-  const isDomainAvailable = whoisData === null && !error;
+  const validateDomain = (domain) => {
+    const validTLDs = fetchValidTLDs();
+    const domainParts = domain.split('.');
+    const tld = `.${domainParts[domainParts.length - 1]}`;
+    return validTLDs.includes(tld);
+  };
+
+  const fetchBulkWhoisData = async (domains) => {
+    const results = [];
+    for (const domain of domains) {
+      if (!validateDomain(domain)) {
+        results.push({ domain, error: "Invalid URL" });
+        continue;
+      }
+      try {
+        const response = await fetch(`https://who-dat.as93.net/${domain}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch WHOIS data");
+        }
+        const data = await response.json();
+        results.push({ domain, data });
+      } catch (err) {
+        results.push({ domain, error: err.message });
+      }
+    }
+    setBulkResults(results);
+  };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -57,6 +83,23 @@ const Index = () => {
   const handleAddToCart = () => {
     addToCart({ name: searchedDomain, price: 13 });
   };
+
+  const handleBulkImport = () => {
+    setBulkImport(!bulkImport);
+  };
+
+  const handleBulkSubmit = () => {
+    const domains = bulkDomains.split('\n').map(domain => domain.trim()).filter(domain => domain);
+    fetchBulkWhoisData(domains);
+  };
+
+  const handleBulkCancel = () => {
+    setBulkImport(false);
+    setBulkDomains("");
+    setBulkResults([]);
+  };
+
+  const isDomainAvailable = whoisData === null && !error;
 
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center" mt="16">
@@ -78,6 +121,23 @@ const Index = () => {
         <Button onClick={fetchWhoisData} colorScheme="blue">Search</Button>
       </Flex>
       
+      <Button onClick={handleBulkImport} colorScheme="blue" mb={4}>Bulk Import</Button>
+      
+      {bulkImport && (
+        <Box width="100%" mb={4}>
+          <Input
+            placeholder="Enter domains, one per line"
+            value={bulkDomains}
+            onChange={(e) => setBulkDomains(e.target.value)}
+            mb={2}
+          />
+          <Flex justifyContent="space-between">
+            <Button onClick={handleBulkSubmit} colorScheme="blue">Submit</Button>
+            <Button onClick={handleBulkCancel} colorScheme="red">Cancel</Button>
+          </Flex>
+        </Box>
+      )}
+      
       {hasSearched && (
         <Text fontSize="2xl" mb={4} textAlign="left" width="100%">Search Results:</Text>
       )}
@@ -86,7 +146,7 @@ const Index = () => {
         <Box p={4} bg="gray.100" borderRadius="md" width="100%">
           <Flex align="center" justify="space-between">
             <Box>
-              <Text fontSize="xl" fontWeight="bold">{searchedDomain}</Text> {/* Use searchedDomain */}
+              <Text fontSize="xl" fontWeight="bold">{searchedDomain}</Text>
               <Text color="green.500">Available</Text>
             </Box>
             <Button colorScheme="teal" onClick={handleAddToCart}>Add to Cart</Button>
@@ -97,7 +157,7 @@ const Index = () => {
         <Box p={4} bg="gray.100" borderRadius="md" width="100%">
           <Flex align="center" justify="space-between">
             <Box>
-              <Text fontSize="xl" fontWeight="bold">{searchedDomain}</Text> {/* Use searchedDomain */}
+              <Text fontSize="xl" fontWeight="bold">{searchedDomain}</Text>
               <Text color="red.500">Unavailable</Text>
             </Box>
             <Button colorScheme="teal">Try to Purchase This Domain Anyway</Button>
@@ -108,11 +168,35 @@ const Index = () => {
         <Box p={4} bg="gray.100" borderRadius="md" width="100%">
           <Flex align="center" justify="space-between">
             <Box>
-              <Text fontSize="xl" fontWeight="bold">{searchedDomain}</Text> {/* Use searchedDomain */}
+              <Text fontSize="xl" fontWeight="bold">{searchedDomain}</Text>
               <Text color="green.500">Available</Text>
             </Box>
             <Button colorScheme="teal" onClick={handleAddToCart}>Add to Cart</Button>
           </Flex>
+        </Box>
+      )}
+      
+      {bulkResults.length > 0 && (
+        <Box width="100%">
+          {bulkResults.map((result, index) => (
+            <Box key={index} p={4} bg="gray.100" borderRadius="md" width="100%" mb={1}>
+              <Flex align="center" justify="space-between">
+                <Box>
+                  <Text fontSize="xl" fontWeight="bold">{result.domain}</Text>
+                  {result.error ? (
+                    <Text color="red.500">{result.error}</Text>
+                  ) : (
+                    <Text color={result.data ? "red.500" : "green.500"}>
+                      {result.data ? "Unavailable" : "Available"}
+                    </Text>
+                  )}
+                </Box>
+                {!result.error && !result.data && (
+                  <Button colorScheme="teal" onClick={() => addToCart({ name: result.domain, price: 13 })}>Add to Cart</Button>
+                )}
+              </Flex>
+            </Box>
+          ))}
         </Box>
       )}
     </Container>
