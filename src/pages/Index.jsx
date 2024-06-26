@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { Container, Text, Input, Button, Box, Flex, Heading, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure } from "@chakra-ui/react";
+import { Container, Text, Input, Button, Box, Flex, Heading, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, Textarea } from "@chakra-ui/react";
 import fetchValidTLDs from '../utils/validTLDs';
 import { CartContext } from '../context/CartContext';
 
@@ -112,7 +112,7 @@ const Index = () => {
         <Button onClick={fetchWhoisData} colorScheme="blue">Search</Button>
       </Flex>
       
-      <Button onClick={onOpen} colorScheme="blue" mb={4}>Bulk Import</Button>
+      <Button onClick={onOpen} colorScheme="blue" mb={4}>Bulk Search</Button>
       
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -120,7 +120,7 @@ const Index = () => {
           <ModalHeader>Bulk Import Domains</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Input
+            <Textarea
               placeholder="Enter domains, one per line"
               value={bulkDomains}
               onChange={(e) => setBulkDomains(e.target.value)}
