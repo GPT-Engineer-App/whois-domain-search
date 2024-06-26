@@ -70,6 +70,7 @@ const Index = () => {
       } catch (err) {
         results.push({ domain, error: err.message });
       }
+      await new Promise(resolve => setTimeout(resolve, 500)); // Wait for 0.5 seconds
     }
     setBulkResults(results);
   };
@@ -117,7 +118,7 @@ const Index = () => {
       {bulkResults.length > 0 && (
         <Box width="100%">
           {bulkResults.map((result, index) => (
-            <Box key={index} p={4} bg="gray.100" borderRadius="md" width="100%" mb={1}>
+            <Box key={index} p={4} bg="gray.100" borderRadius="md" width="100%" mb={1} mt={1}>
               <Flex align="center" justify="space-between">
                 <Box>
                   <Text fontSize="xl" fontWeight="bold">{result.domain}</Text>
